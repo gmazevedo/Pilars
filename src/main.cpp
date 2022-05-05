@@ -383,7 +383,7 @@ bool colisao(glm::vec4 origem, glm::vec4 direcao)
     int i = 0, j=0;
     int quantidade_obj = 3;
     //std::string lista_objetos[quantidade_obj] = {"bunny", "fly",  "parede", "cube"};
-    std::string lista_objetos[quantidade_obj] = {"bunny",  "cube"};
+    std::string lista_objetos[quantidade_obj] = {"bunny",  "cube","book"};
 
     for(i=0; i<quantidade_obj;i++)
     {
@@ -529,8 +529,8 @@ int main(int argc, char* argv[])
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/chao.png");         // TextureImage0
     LoadTextureImage("../../data/parede.jpg");       // TextureImage1
-    LoadTextureImage("../../data/livro.jpg");        // TextureImage2
-    LoadTextureImage("../../data/galaxia.jpg");      // TextureImage3
+    //LoadTextureImage("../../data/livro.jpg");        // TextureImage2
+    //LoadTextureImage("../../data/galaxia.jpg");      // TextureImage3
     //LoadTextureImage("../../data/fly.png");          // TextureImage4
 
     // Construímos a representação de objetos geométricos através de malhas de triângulos
@@ -554,9 +554,9 @@ int main(int argc, char* argv[])
     ComputeNormals(&bookmodel);
     SceneObject bookobject =  BuildTrianglesAndAddToVirtualScene(&bookmodel);
 
-    ObjModel cylindermodel("../../data/cylinder.obj");
-    ComputeNormals(&cylindermodel);
-    SceneObject cylinderobject =  BuildTrianglesAndAddToVirtualScene(&cylindermodel);
+    //ObjModel cylindermodel("../../data/cylinder.obj");
+    //ComputeNormals(&cylindermodel);
+    //SceneObject cylinderobject =  BuildTrianglesAndAddToVirtualScene(&cylindermodel);
 
     ObjModel pilarmodel("../../data/bunny.obj");
     ComputeNormals(&pilarmodel);
@@ -614,7 +614,7 @@ int main(int argc, char* argv[])
     //g_VirtualScene["bunny"].clicado = false;
     //g_VirtualScene["fly"].clicado = false;
 
-    int textura_bunny, textura_fly, x_bunny = -30.0f, y_bunny = 0.0f, z_bunny = -2.0f;
+    int textura_bunny, x_bunny = -30.0f, y_bunny = 0.0f, z_bunny = -2.0f;
    // int x_fly = -25.0f, y_fly = 3.0f, z_fly = 40.0f;
 
     // Ficamos em loop, renderizando, até que o usuário feche a janela
@@ -944,38 +944,7 @@ int main(int argc, char* argv[])
 
         //pilares
         //primeira sala
-        giro_coelho += 0.2f * deltatime;
-         g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj] = Matrix_Translate(-10.0f,25.0f,25.0f)
-                                * Matrix_Rotate_Y(giro_coelho)
-                                * Matrix_Rotate_X(1.57f)
-                                * Matrix_Scale(1.0f,1.0f,10.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj++]));
-        glUniform1i(object_id_uniform, CYLINDER);
-        DrawVirtualObject("cylinder");
 
-        g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj] = Matrix_Translate(10.0f,25.0f,25.0f)
-                                * Matrix_Rotate_Y(giro_coelho)
-                                * Matrix_Rotate_X(1.57f)
-                                * Matrix_Scale(1.0f,1.0f,10.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj++]));
-        glUniform1i(object_id_uniform, CYLINDER);
-        DrawVirtualObject("cylinder");
-
-        g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj] = Matrix_Translate(-10.0f,25.0f,-25.0f)
-                                * Matrix_Rotate_Y(giro_coelho)
-                                * Matrix_Rotate_X(1.57f)
-                                * Matrix_Scale(1.0f,1.0f,10.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj++]));
-        glUniform1i(object_id_uniform, CYLINDER);
-        DrawVirtualObject("cylinder");
-
-        g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj] = Matrix_Translate(10.0f,25.0f,-25.0f)
-                                * Matrix_Rotate_Y(giro_coelho)
-                                * Matrix_Rotate_X(1.57f)
-                                * Matrix_Scale(1.0f,1.0f,10.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj++]));
-        glUniform1i(object_id_uniform, CYLINDER);
-        DrawVirtualObject("cylinder");
 
         //sala do meio
        /* g_VirtualScene["cylinder"].model[g_VirtualScene["cylinder"].ultimo_obj] = Matrix_Translate(0.0f,25.0f,50.0f)
@@ -1045,7 +1014,8 @@ int main(int argc, char* argv[])
         */
 
 
-        //Modelos de coelho e cubo para demonstração do PHONG shading na primeira sala
+        //Coelhos para demonstração do PHONG shading
+        // COELHO 1
         giro_coelho += 0.2f * deltatime;
         if(giro_coelho >= 7.85f){ giro_coelho = 1.57f; }
         g_VirtualScene["bunny"].model[g_VirtualScene["bunny"].ultimo_obj] = Matrix_Translate(-20.0f,0.5f,5.0f)
@@ -1062,6 +1032,53 @@ int main(int argc, char* argv[])
         DrawVirtualObject("cube");
 
         g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,0.0f,5.0f)
+                                                                        * Matrix_Scale(2.0f,2.0f,2.0f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
+        glUniform1i(object_id_uniform, PHONG);
+
+        ////////////////////////////
+        // COELHO 2
+              /*  glm::mat4 model_book = Matrix_Translate(-50.0f,0.5f,100.0f)
+                             * Matrix_Rotate_Y(3.1f)
+                             * Matrix_Scale(0.1f,0.1f,0.1f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_book));
+        glUniform1i(object_id_uniform, BOOK);
+        DrawVirtualObject("book");*/
+
+        g_VirtualScene["book"].model[g_VirtualScene["book"].ultimo_obj] = Matrix_Translate(-20.0f,0.5f,10.0f)
+                       * Matrix_Rotate_Y(3.1f)
+                       * Matrix_Scale(0.1f,0.1f,0.1f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["book"].model[g_VirtualScene["book"].ultimo_obj++]));
+        glUniform1i(object_id_uniform, PHONG);
+        DrawVirtualObject("book");
+
+        g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,-1.5f,10.0f)
+                                                                        * Matrix_Scale(2.0f,2.0f,2.0f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
+        glUniform1i(object_id_uniform, PHONG);
+        DrawVirtualObject("cube");
+
+        g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,0.0f,10.0f)
+                                                                        * Matrix_Scale(2.0f,2.0f,2.0f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
+        glUniform1i(object_id_uniform, PHONG);
+
+        ////////////////////////////
+        // COELHO 3
+        g_VirtualScene["bunny"].model[g_VirtualScene["bunny"].ultimo_obj] = Matrix_Translate(-20.0f,0.5f,15.0f)
+                * Matrix_Rotate_Y(giro_coelho)
+                * Matrix_Scale(1.0f,1.0f,1.0f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["bunny"].model[g_VirtualScene["bunny"].ultimo_obj++]));
+        glUniform1i(object_id_uniform, PHONG);
+        DrawVirtualObject("bunny");
+
+        g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,-1.5f,15.0f)
+                                                                        * Matrix_Scale(2.0f,2.0f,2.0f);
+        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
+        glUniform1i(object_id_uniform, PHONG);
+        DrawVirtualObject("cube");
+
+        g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,0.0f,15.0f)
                                                                         * Matrix_Scale(2.0f,2.0f,2.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
         glUniform1i(object_id_uniform, PHONG);
@@ -1167,7 +1184,7 @@ int main(int argc, char* argv[])
                 {
                     g_VirtualScene["bunny"].clicado = true;
                 }
-                /*else if(selecionado.compare("fly") == 0)
+                else if(selecionado.compare("fly") == 0)
                 {
                     g_VirtualScene["fly"].clicado = true;
                 }*/
