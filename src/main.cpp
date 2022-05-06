@@ -381,9 +381,9 @@ bool colisao(glm::vec4 origem, glm::vec4 direcao)
     int max_obj;
     bool colidiu = false;
     int i = 0, j=0;
-    int quantidade_obj = 3;
+    int quantidade_obj = 4;
     //std::string lista_objetos[quantidade_obj] = {"bunny", "fly",  "parede", "cube"};
-    std::string lista_objetos[quantidade_obj] = {"bunny",  "cube","book"};
+    std::string lista_objetos[quantidade_obj] = {"bunny",  "cube"};
 
     for(i=0; i<quantidade_obj;i++)
     {
@@ -411,7 +411,7 @@ std::string clique(glm::vec4 origem, glm::vec4 direcao)
     int i = 0, j=0;
     int quantidade_obj = 2;
     //std::string lista_objetos[quantidade_obj] = {"bunny", "fly",  "parede", "cube"};
-    std::string lista_objetos[quantidade_obj] = {"bunny", "pilar"};
+    std::string lista_objetos[quantidade_obj] = {"bunny", "pilar",};
 
     for(i=0; i<quantidade_obj;i++)
     {
@@ -529,7 +529,7 @@ int main(int argc, char* argv[])
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/chao.png");         // TextureImage0
     LoadTextureImage("../../data/parede.jpg");       // TextureImage1
-    //LoadTextureImage("../../data/livro.jpg");        // TextureImage2
+    LoadTextureImage("../../data/livro.jpg");        // TextureImage2
     //LoadTextureImage("../../data/galaxia.jpg");      // TextureImage3
     //LoadTextureImage("../../data/fly.png");          // TextureImage4
 
@@ -674,6 +674,7 @@ int main(int argc, char* argv[])
         g_VirtualScene["parede"].ultimo_obj = 0;
         g_VirtualScene["cylinder"].ultimo_obj = 0;
         g_VirtualScene["pilar"].ultimo_obj=0;
+         g_VirtualScene["book"].ultimo_obj=0;
 
         //g_VirtualScene["bunny"].clicado = false;
 
@@ -1046,10 +1047,10 @@ int main(int argc, char* argv[])
         DrawVirtualObject("book");*/
 
         g_VirtualScene["book"].model[g_VirtualScene["book"].ultimo_obj] = Matrix_Translate(-20.0f,0.5f,10.0f)
-                       * Matrix_Rotate_Y(3.1f)
+                       * Matrix_Rotate_Y(giro_coelho )
                        * Matrix_Scale(0.1f,0.1f,0.1f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["book"].model[g_VirtualScene["book"].ultimo_obj++]));
-        glUniform1i(object_id_uniform, PHONG);
+        glUniform1i(object_id_uniform, BOOK);
         DrawVirtualObject("book");
 
         g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj] = Matrix_Translate(-19.90f,-1.5f,10.0f)
