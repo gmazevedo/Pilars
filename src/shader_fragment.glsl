@@ -33,7 +33,8 @@ uniform mat4 projection;
 #define CYLINDER 8
 #define FLY      9
 #define PHONG    10
-#define GHOST 12
+#define GHOST    12
+#define PAREDEP_ABERTA 13
 
 
 uniform int object_id;
@@ -47,6 +48,7 @@ uniform sampler2D TextureImage0;//chão
 uniform sampler2D TextureImage1;//parede
 uniform sampler2D TextureImage2;//livro
 uniform sampler2D TextureImage3;//ghost
+uniform sampler2D TextureImage4; //galaxia
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
 out vec3 color;
@@ -164,6 +166,12 @@ void main()
         U = texcoords.x*2.34;
         V = texcoords.y*4;
     }
+        else if ( object_id == PAREDEP_ABERTA)
+    {
+        // Coordenadas de textura do plano, obtidas do arquivo OBJ.
+        U = texcoords.x;
+        V = texcoords.y;
+    }
     else if ( object_id == BOOK)
     {
         // Coordenadas de textura do plano, obtidas do arquivo OBJ.
@@ -212,6 +220,10 @@ void main()
     else if(object_id == PAREDEP)
     {
         color = texture(TextureImage1, vec2(U,V)).rgb * (lambert + 0.1);
+    }
+        else if(object_id == PAREDEP_ABERTA)
+    {
+        color = texture(TextureImage4, vec2(U,V)).rgb * (lambert + 0.1);
     }
     else if(object_id == BOOK)
     {
