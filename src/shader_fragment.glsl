@@ -33,6 +33,7 @@ uniform mat4 projection;
 #define CYLINDER 8
 #define FLY      9
 #define PHONG    10
+#define GHOST 12
 
 
 uniform int object_id;
@@ -45,8 +46,7 @@ uniform vec4 bbox_max;
 uniform sampler2D TextureImage0;//chão
 uniform sampler2D TextureImage1;//parede
 uniform sampler2D TextureImage2;//livro
-uniform sampler2D TextureImage3;//galaxia
-uniform sampler2D TextureImage4;//mosca
+uniform sampler2D TextureImage3;//ghost
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
 out vec3 color;
@@ -164,38 +164,23 @@ void main()
         U = texcoords.x*2.34;
         V = texcoords.y*4;
     }
-    else if ( object_id == CYLINDER)
-    {
-        // Coordenadas de textura do plano, obtidas do arquivo OBJ.
-        U = texcoords.x;
-        V = texcoords.y;
-    }
     else if ( object_id == BOOK)
     {
         // Coordenadas de textura do plano, obtidas do arquivo OBJ.
         U = texcoords.x;
         V = texcoords.y;
     }
-    else if ( object_id == FLY)
-    {
-        // Coordenadas de textura do plano, obtidas do arquivo OBJ.
-        float minx = bbox_min.x;
-        float maxx = bbox_max.x;
-
-        float miny = bbox_min.y;
-        float maxy = bbox_max.y;
-
-        float minz = bbox_min.z;
-        float maxz = bbox_max.z;
-
-        U = (position_model.x - minx)/(maxx - minx);
-        V = (position_model.y - miny)/(maxy - miny);
-    }
     else if ( object_id == PHONG)
     {
         // Coordenadas de textura do plano, obtidas do arquivo OBJ.
         U = texcoords.x*2;
         V = texcoords.y*2;
+    }
+    else if ( object_id == GHOST)
+    {
+        // Coordenadas de textura do plano, obtidas do arquivo OBJ.
+        U = texcoords.x;
+        V = texcoords.y;
     }
 
     //ILUMINAÇÃO E TEXTURAS
@@ -228,22 +213,22 @@ void main()
     {
         color = texture(TextureImage1, vec2(U,V)).rgb * (lambert + 0.1);
     }
-    else if(object_id == CYLINDER)
-    {
-        color = texture(TextureImage3, vec2(U,V)).rgb * (lambert + 0.1);
-    }
     else if(object_id == BOOK)
     {
         color = texture(TextureImage2, vec2(U,V)).rgb * (lambert + 0.1);
-    }
-    else if(object_id == FLY)
-    {
-        color = texture(TextureImage4, vec2(U,V)).rgb * colorg;
     }
     else if(object_id == PHONG)
     {
         vec3 phong = (lambert + 0.1) + I * vec3(10.0,10.0,10.0) * pow(max(0, angulo_incidencia),10); //reflexo exagerado para a esfera de demonstração
         color = texture(TextureImage0, vec2(U,V)).rgb * phong;
+    }
+    else if(object_id == BUNNY)
+    {
+        color =  vec3(0.0,0.3,0.0) * phong;
+    }
+    else if(object_id == GHOST)
+    {
+        color = texture(TextureImage3, vec2(U,V)).rgb * (lambert + 0.1);
     }
 
     // Cor final com correção gamma, considerando monitor sRGB.
