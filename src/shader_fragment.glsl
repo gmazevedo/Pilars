@@ -23,15 +23,13 @@ uniform mat4 projection;
 
 // Identificador que define qual objeto está sendo desenhado no momento
 #define SPHERE   0
-#define BUNNY    1
+#define GREEN    1
 #define CAMERA   2
 #define CHAO     3
 #define PAREDE   4
 #define PAREDEM  5
 #define PAREDEP  6
 #define BOOK     7
-#define CYLINDER 8
-#define FLY      9
 #define PHONG    10
 #define GHOST    12
 #define PAREDEP_ABERTA 13
@@ -48,7 +46,8 @@ uniform sampler2D TextureImage0;//chão
 uniform sampler2D TextureImage1;//parede
 uniform sampler2D TextureImage2;//livro
 uniform sampler2D TextureImage3;//ghost
-uniform sampler2D TextureImage4; //galaxia
+uniform sampler2D TextureImage4;//galaxia
+uniform sampler2D TextureImage5;//terra
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
 out vec3 color;
@@ -119,7 +118,7 @@ void main()
         V = (phi + (M_PI/2)) / M_PI;
 
     }
-    else if ( object_id == BUNNY )
+    else if ( object_id == GREEN )
     {
         // PREENCHA AQUI as coordenadas de textura do coelho, computadas com
         // projeção planar XY em COORDENADAS DO MODELO. Utilize como referência
@@ -234,13 +233,17 @@ void main()
         vec3 phong = (lambert + 0.1) + I * vec3(10.0,10.0,10.0) * pow(max(0, angulo_incidencia),10); //reflexo exagerado para a esfera de demonstração
         color = texture(TextureImage0, vec2(U,V)).rgb * phong;
     }
-    else if(object_id == BUNNY)
+    else if(object_id == GREEN)
     {
         color =  vec3(0.0,0.3,0.0) * phong;
     }
     else if(object_id == GHOST)
     {
         color = texture(TextureImage3, vec2(U,V)).rgb * (lambert + 0.1);
+    }
+    else if(object_id == SPHERE)
+    {
+        color = texture(TextureImage5, vec2(U,V)).rgb * (lambert + 0.1);
     }
 
     // Cor final com correção gamma, considerando monitor sRGB.
