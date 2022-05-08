@@ -198,6 +198,8 @@ bool g_UseFreeCamera = true;
 // Variável que controla se o texto informativo será mostrado na tela.
 bool g_ShowInfoText = true;
 
+bool is_Door_Closed = true;
+
 // Variáveis que definem um programa de GPU (shaders). Veja função LoadShadersFromFiles().
 GLuint vertex_shader_id;
 GLuint fragment_shader_id;
@@ -414,7 +416,7 @@ bool colisao(glm::vec4 origem, glm::vec4 direcao)
     int i = 0, j=0;
     int quantidade_obj = 4;
     //std::string lista_objetos[quantidade_obj] = {"bunny", "fly",  "parede", "cube"};
-    std::string lista_objetos[quantidade_obj] = {"bunny",  "cube", "pilar", "ghost"};
+    std::string lista_objetos[quantidade_obj] = {"bunny", "ghost", "cube", "pilar"};
 
     for(i=0; i<quantidade_obj;i++)
     {
@@ -442,7 +444,7 @@ std::string clique(glm::vec4 origem, glm::vec4 direcao)
     int i = 0, j=0;
     int quantidade_obj = 4;
     //std::string lista_objetos[quantidade_obj] = {"bunny", "fly",  "parede", "cube"};
-    std::string lista_objetos[quantidade_obj] = {"bunny","livro", "pilar", "ghost"};
+    std::string lista_objetos[quantidade_obj] = {"bunny",  "ghost", "livro", "pilar"};
 
     for(i=0; i<quantidade_obj;i++)
     {
@@ -560,10 +562,9 @@ int main(int argc, char* argv[])
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/chao.png");         // TextureImage0
     LoadTextureImage("../../data/parede.jpg");       // TextureImage1
-    LoadTextureImage("../../data/livro.jpg");        // TextureImage2
-    LoadTextureImage("../../data/ghost.png");
-    //LoadTextureImage("../../data/galaxia.jpg");      // TextureImage3
-    //LoadTextureImage("../../data/fly.png");          // TextureImage4
+    LoadTextureImage("../../data/livro.jpg");
+    LoadTextureImage("../../data/ghost.png");      // TextureImage2
+    LoadTextureImage("../../data/galaxia.jpg");     // TextureImage3
 
     // Construímos a representação de objetos geométricos através de malhas de triângulos
     ObjModel cameramodel("../../data/camera.obj");
@@ -586,7 +587,7 @@ int main(int argc, char* argv[])
     ComputeNormals(&bookmodel);
     SceneObject bookobject =  BuildTrianglesAndAddToVirtualScene(&bookmodel);
 
-    ObjModel ghostmodel("../../data/cow.obj");
+    ObjModel ghostmodel("../../data/ghost.obj");
     ComputeNormals(&ghostmodel);
     BuildTrianglesAndAddToVirtualScene(&ghostmodel);
 
@@ -699,6 +700,7 @@ int main(int argc, char* argv[])
         #define PHONG    10
         #define PILAR    11
         #define GHOST    12
+        #define PAREDEP_ABERTA 13
 
 
         glm::mat4  model_plane = Matrix_Identity(); // Transformação identidade de modelagem
@@ -742,15 +744,6 @@ int main(int argc, char* argv[])
             }
 
         }
-        /*else if(textura_fly == PHONG && g_LeftMouseButtonPressed && !clique(camera_position_c, camera_view_vector).compare("fly") &&  g_VirtualScene["fly"].clicado)
-            if(z>0)
-            {
-                z_fly = z_fly + 1.0f;
-            }
-            else
-            {
-                z_fly =  z_fly - 1.0f;
-            }*/
 
         g_VirtualScene["bunny"].model[g_VirtualScene["bunny"].ultimo_obj] = Matrix_Translate(x_bunny,y_bunny,z_bunny);
             glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["bunny"].model[g_VirtualScene["bunny"].ultimo_obj++]));
@@ -778,44 +771,8 @@ int main(int argc, char* argv[])
         glUniform1i(object_id_uniform, CUBE);
         DrawVirtualObject("cube");
 
-        model_cube = Matrix_Translate(0.0f,-2.1f,50.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
-        model_cube = Matrix_Translate(-50.0f,-2.1f,50.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
-        model_cube = Matrix_Translate(-50.0f,-2.1f,100.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
         //TETO
         model_cube = Matrix_Translate(0.0f,22.0f,0.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
-        model_cube = Matrix_Translate(0.0f,22.1f,50.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
-        model_cube = Matrix_Translate(-50.0f,22.1f,50.0f)
-                   * Matrix_Scale(50.0f,0.5f,50.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
-        glUniform1i(object_id_uniform, CUBE);
-        DrawVirtualObject("cube");
-
-        model_cube = Matrix_Translate(-50.0f,22.1f,100.0f)
                    * Matrix_Scale(50.0f,0.5f,50.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_cube));
         glUniform1i(object_id_uniform, CUBE);
@@ -989,12 +946,21 @@ int main(int argc, char* argv[])
         glUniform1i(object_id_uniform, PAREDEP);
         DrawVirtualObject("parede");
 
-        model_parede = Matrix_Translate(0.0f,5.0f,25.0f)
-                    * Matrix_Rotate_X(1.57f)
-                    * Matrix_Scale(20.0f,0.5f,15.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_parede));
-        glUniform1i(object_id_uniform, PAREDEP);
-        DrawVirtualObject("parede");
+        if (is_Door_Closed) {
+            model_parede = Matrix_Translate(0.0f,5.0f,25.0f)
+                        * Matrix_Rotate_X(1.57f)
+                        * Matrix_Scale(20.0f,0.5f,15.0f);
+            glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_parede));
+            glUniform1i(object_id_uniform, PAREDEP);
+            DrawVirtualObject("parede");
+        } else {
+            model_parede = Matrix_Translate(0.0f,5.0f,25.0f)
+                        * Matrix_Rotate_X(1.57f)
+                        * Matrix_Scale(20.0f,0.5f,15.0f);
+            glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_parede));
+            glUniform1i(object_id_uniform, PAREDEP_ABERTA);
+            DrawVirtualObject("parede");
+        }
 
 
 
@@ -1019,15 +985,6 @@ int main(int argc, char* argv[])
                                                                         * Matrix_Scale(2.0f,2.0f,2.0f);
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
         glUniform1i(object_id_uniform, PHONG);
-
-        ////////////////////////////
-        // COELHO 2
-              /*  glm::mat4 model_book = Matrix_Translate(-50.0f,0.5f,100.0f)
-                             * Matrix_Rotate_Y(3.1f)
-                             * Matrix_Scale(0.1f,0.1f,0.1f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_book));
-        glUniform1i(object_id_uniform, BOOK);
-        DrawVirtualObject("book");*/
 
         g_VirtualScene["book"].model[g_VirtualScene["book"].ultimo_obj] = Matrix_Translate(-20.0f,0.5f,10.0f)
                        * Matrix_Rotate_Y(giro_coelho )
@@ -1067,29 +1024,6 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(g_VirtualScene["cube"].model[g_VirtualScene["cube"].ultimo_obj]));
         glUniform1i(object_id_uniform, PHONG);
 
-        //porta da primeira sala
-
-      /*  if(altura_porta1 >= -10.0f){
-            altura_porta1 = altura_porta1 - 2.0f * deltatime;
-        }
-        model_parede = Matrix_Translate(0.0f,altura_porta1,25.0f)
-                         * Matrix_Rotate_X(1.57f)
-                         * Matrix_Scale(10.0f,0.5f,15.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_parede));
-        glUniform1i(object_id_uniform, PAREDEP);
-        DrawVirtualObject("parede");*/
-
-        //PORTA DA SALA DO LIVRO
-        /*if(altura_porta2 >= -10.0f && textura_fly == PHONG){
-            altura_porta2 = altura_porta2 - 2.0f * deltatime;
-        }
-        model_parede = Matrix_Translate(-50.0f,altura_porta2,75.0f)
-                         * Matrix_Rotate_X(1.57f)
-                         * Matrix_Scale(10.0f,0.5f,15.0f);
-        glUniformMatrix4fv(model_uniform, 1 , GL_FALSE , glm::value_ptr(model_parede));
-        glUniform1i(object_id_uniform, PAREDEP);
-        DrawVirtualObject("parede");*/
-
 
     }
 
@@ -1117,6 +1051,10 @@ int main(int argc, char* argv[])
                 paredes = paredes || (camera_position_c.x < -24) && camera_position_c.z  < 25;
                 paredes = paredes || (camera_position_c.z > 74   && (camera_position_c.x < -54  ||  camera_position_c.x > -46) && camera_position_c.z < 76);
                 paredes = paredes || (camera_position_c.x > -26  && camera_position_c.z > 76 );
+
+                if(camera_position_c.z > 24) {
+                    fim = !fim;
+                }
 
 
                 if(colisao(camera_position_c, camera_view_vector) || paredes)
@@ -2102,6 +2040,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_D && action == GLFW_RELEASE)
     {
             playermovey = 0.0f;
+    }
+        if (key == GLFW_KEY_B && action == GLFW_RELEASE)
+    {
+            is_Door_Closed = !is_Door_Closed;
     }
 }
 
