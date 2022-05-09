@@ -30,9 +30,9 @@ uniform mat4 projection;
 #define PAREDEM  5
 #define PAREDEP  6
 #define BOOK     7
-#define PHONG    10
-#define GHOST    12
-#define PAREDEP_ABERTA 13
+#define PHONG    8
+#define GHOST    9
+#define PAREDEP_ABERTA 10
 
 
 uniform int object_id;
@@ -165,7 +165,7 @@ void main()
         U = texcoords.x*2.34;
         V = texcoords.y*4;
     }
-        else if ( object_id == PAREDEP_ABERTA)
+    else if ( object_id == PAREDEP_ABERTA)
     {
         // Coordenadas de textura do plano, obtidas do arquivo OBJ.
         U = texcoords.x;
@@ -220,7 +220,7 @@ void main()
     {
         color = texture(TextureImage1, vec2(U,V)).rgb * (lambert + 0.1);
     }
-        else if(object_id == PAREDEP_ABERTA)
+    else if(object_id == PAREDEP_ABERTA)
     {
         color = texture(TextureImage4, vec2(U,V)).rgb * (lambert + 0.1);
     }
