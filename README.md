@@ -2,9 +2,9 @@
 
 
 ## Integrantes
-- Gessica Franciéle Mendonça Azevedo - 302865
+- Gessica Franciéle Mendonça Azevedo
 
-- Pedro Rossi Jacobus - 275927
+- Pedro Rossi Jacobus
 
 ## Descrição
 A aplicação será uma versão simples de um Escape Room.
